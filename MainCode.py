@@ -32,15 +32,16 @@ class MainCode(QtWidgets.QMainWindow, Ui_MainWindow):
         src, _ = QFileDialog.getOpenFileName(self, '加载源图', 'F:\picture for lhr\\', 'Image files(*.jpg *.gif *.png)')
 
         # 使用OpenCV转换为灰度图
-        global img
-        img = cv2.imread(src, cv2.IMREAD_GRAYSCALE)  # 读取图片，第二个参数表示以灰度图像读入
+        global grayImg
+        grayImg = cv2.imread(src, cv2.IMREAD_GRAYSCALE)  # 读取图片，第二个参数表示以灰度图像读入
         # print(img.shape)
 
     def onchooseImgBtnClicked(self, remark):
         # print(remark)
-        x = img.shape[1]  # 获取图像width
-        y = img.shape[0]  # 获取图像height
-        frame = QImage(img, x, y, QImage.Format_Grayscale8)
+        # 提取图像的尺寸，用于将OpenCV下的grayImg转换成Qimage
+        width = grayImg.shape[1]  # 获取图像尺寸
+        height = grayImg.shape[0]
+        frame = QImage(grayImg, width, height, QImage.Format_Grayscale8)  # 图像是使用一个8位灰度格式存储
 
         # 创建图元和场景，显示图片
         # pix = QPixmap.fromImage(frame)  # 下面的语句都可以
@@ -53,7 +54,7 @@ class MainCode(QtWidgets.QMainWindow, Ui_MainWindow):
     def onhistBtnClicked(self):
         # self.histView.setScene(self.scene)
         # 参数:原图像 通道[0]-灰度图 掩码 BINS为256 像素范围0-255
-        hist = cv2.calcHist(img, [0], None, [256], [0, 255])
+        hist = cv2.calcHist(grayImg, [0], None, [256], [0, 255])
         # print(type(hist))
         # print(hist.size)
         # print(hist.shape)
@@ -73,8 +74,20 @@ class MainCode(QtWidgets.QMainWindow, Ui_MainWindow):
         self.histView.show()
 
     def onbinaryBtnClicked(self):
-        self.Title.setText("Hello China")
         print('2')
+        threshVal, dst = cv2.threshold(grayImg, 0, 255, cv2.THRESH_OTSU)
+        # cv2.imshow("gray", grayImg)
+        # cv2.imshow("dst", dst)
+        # cv2.waitKey(0)
+        print(threshVal)
+        width = dst.shape[1]  # 获取图像尺寸
+        height = dst.shape[0]
+        frame = QImage(dst, width, height, QImage.Format_Grayscale8)  # 图像是使用一个8位灰度格式存储
+        pix = QPixmap(frame)
+        self.item = QGraphicsPixmapItem(pix)  # 创建像素图元
+        self.scene = QGraphicsScene()  # 创建场景
+        self.scene.addItem(self.item)
+        self.binaryView.setScene(self.scene)  # 将场景添加至视图
 
 class MyFigure(FigureCanvas):
     def __init__(self, width=5, height=4, dpi=100):

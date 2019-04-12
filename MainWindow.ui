@@ -26,7 +26,7 @@
     <property name="title">
      <string>GroupBox</string>
     </property>
-    <widget class="QSlider" name="theshSlider">
+    <widget class="QSlider" name="threshSlider">
      <property name="geometry">
       <rect>
        <x>10</x>
