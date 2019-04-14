@@ -1,5 +1,6 @@
 import cv2
 import sys
+import numpy as np
 import matplotlib
 matplotlib.use("Qt5Agg")  # 声明使用QT5
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
@@ -21,10 +22,11 @@ class MainCode(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.setWindowTitle('图像处理软件')  # 窗口名字
         self.chooseImgBtn.clicked.connect(self.load_image)  # 一定要绑定这个信号，否则全局变量不能用
-        self.chooseImgBtn.clicked.connect(self.onchooseImgBtnClicked)  # 信号函数的命名？？？
+        self.chooseImgBtn.clicked.connect(self.onchooseImgBtnClicked)  # 信号函数的命名-onchooseImgBtnClickeds是系统自带的
         self.histBtn.clicked.connect(self.onhistBtnClicked)
-        self.binaryBtn.clicked.connect(self.onbinaryBtnClicked)
-        self.zoomscale = 1  # 图片放缩尺度
+        self.otsuBtn.clicked.connect(self.onotsuBtnClicked)
+        self.entBtn.clicked.connect(self.onentBtnClicked)
+        self.threshSlider = 1  # 图片放缩尺度
 
     def load_image(self):
         # 加载图片，QFileDialog就是系统对话框的那个类
@@ -37,7 +39,7 @@ class MainCode(QtWidgets.QMainWindow, Ui_MainWindow):
         # print(img.shape)
 
     def onchooseImgBtnClicked(self, remark):
-        # print(remark)
+        print(remark)
         # 提取图像的尺寸，用于将OpenCV下的grayImg转换成Qimage
         width = grayImg.shape[1]  # 获取图像尺寸
         height = grayImg.shape[0]
@@ -73,21 +75,81 @@ class MainCode(QtWidgets.QMainWindow, Ui_MainWindow):
         self.histView.setScene(self.scene)  # 将创建添加到图形视图显示窗口
         self.histView.show()
 
-    def onbinaryBtnClicked(self):
-        print('2')
-        threshVal, dst = cv2.threshold(grayImg, 0, 255, cv2.THRESH_OTSU)
+    def onotsuBtnClicked(self):
+        otsuVal, otsuImg = cv2.threshold(grayImg, 0, 255, cv2.THRESH_OTSU)
         # cv2.imshow("gray", grayImg)
         # cv2.imshow("dst", dst)
         # cv2.waitKey(0)
-        print(threshVal)
-        width = dst.shape[1]  # 获取图像尺寸
-        height = dst.shape[0]
-        frame = QImage(dst, width, height, QImage.Format_Grayscale8)  # 图像是使用一个8位灰度格式存储
+        print(otsuVal)  # 后面需要显示在界面上面!!!
+        width = otsuImg.shape[1]  # 获取图像尺寸
+        height = otsuImg.shape[0]
+        frame = QImage(otsuImg, width, height, QImage.Format_Grayscale8)  # 图像是使用一个8位灰度格式存储
         pix = QPixmap(frame)
         self.item = QGraphicsPixmapItem(pix)  # 创建像素图元
         self.scene = QGraphicsScene()  # 创建场景
         self.scene.addItem(self.item)
-        self.binaryView.setScene(self.scene)  # 将场景添加至视图
+        self.otsuView.setScene(self.scene)  # 将场景添加至视图
+
+    def onentBtnClicked(self):
+        self.entropyView.setScene(self.scene)  # 将场景添加至视图
+        # entImg = self.max_entropy_segmentation(grayImg)
+        # # 显示
+        # width = entImg.shape[1]  # 获取图像尺寸
+        # height = entImg.shape[0]
+        # frame = QImage(entImg, width, height, QImage.Format_Grayscale8)  # 图像是使用一个8位灰度格式存储
+        # pix = QPixmap(frame)
+        # self.item = QGraphicsPixmapItem(pix)  # 创建像素图元
+        # self.scene = QGraphicsScene()  # 创建场景
+        # self.scene.addItem(self.item)
+        # self.entropyView.setScene(self.scene)  # 将场景添加至视图
+
+    # 最大熵阈值分割 - 计算当前熵
+    def calculate_current_entropy(hist, threshold):
+        data_hist = hist.copy()
+        background_sum = 0.
+        target_sum = 0.
+        for i in range(256):
+            if i < threshold:  # 累积背景
+                background_sum += data_hist[i]
+            else:  # 累积目标
+                target_sum += data_hist[i]
+        background_ent = 0.
+        target_ent = 0.
+        for i in range(256):
+            if i < threshold:  # 计算背景熵
+                if data_hist[i] == 0:
+                    continue
+                ratio1 = data_hist[i] / background_sum
+                background_ent -= ratio1 * np.log2(ratio1)
+            else:
+                if data_hist[i] == 0:
+                    continue
+                ratio2 = data_hist[i] / target_sum
+                target_ent -= ratio2 * np.log2(ratio2)
+        return target_ent + background_ent
+
+    # 最大熵阈值分割 - 计算最大熵
+    def max_entropy_segmentation(self):
+        channels = [0]
+        hist_size = [256]
+        prange = [0, 256]
+        hist = cv2.calcHist(grayImg, channels, None, hist_size, prange)
+        hist = np.reshape(hist, [-1])
+        max_ent = 0.
+        max_index = 0
+        for i in range(256):
+            cur_ent = self.calculate_current_entropy(hist, i)
+            if cur_ent > max_ent:
+                max_ent = cur_ent
+                max_index = i
+        ret, th = cv2.threshold(grayImg, max_index, 255, cv2.THRESH_BINARY)
+        cv2.imshow("gray", grayImg)
+        cv2.imshow("dst", th)
+        cv2.waitKey(0)
+        return th
+
+
+
 
 class MyFigure(FigureCanvas):
     def __init__(self, width=5, height=4, dpi=100):
@@ -98,6 +160,7 @@ class MyFigure(FigureCanvas):
         # 第三步：创建一个子图，用于绘制图形用，111表示子图编号，如matlab的subplot(1,1,1)
         self.axes = self.fig.add_subplot(111)
         # 第四步：就是画图，【可以在此类中画，也可以在其它类中画】
+
 
 
 if __name__ == '__main__':
