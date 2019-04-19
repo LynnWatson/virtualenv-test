@@ -6,183 +6,212 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>800</width>
-    <height>600</height>
+    <width>817</width>
+    <height>612</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QGroupBox" name="groupBox">
+   <widget class="QTabWidget" name="Tab">
     <property name="geometry">
      <rect>
       <x>0</x>
-      <y>-10</y>
-      <width>121</width>
-      <height>571</height>
+      <y>0</y>
+      <width>811</width>
+      <height>591</height>
      </rect>
     </property>
-    <property name="title">
-     <string>GroupBox</string>
+    <property name="currentIndex">
+     <number>3</number>
     </property>
-    <widget class="QSlider" name="threshSlider">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>190</y>
-       <width>101</width>
-       <height>22</height>
-      </rect>
-     </property>
-     <property name="orientation">
-      <enum>Qt::Horizontal</enum>
-     </property>
+    <widget class="QWidget" name="tab1">
+     <attribute name="title">
+      <string>Tab 1</string>
+     </attribute>
+     <widget class="QWidget" name="layoutWidget">
+      <property name="geometry">
+       <rect>
+        <x>0</x>
+        <y>0</y>
+        <width>801</width>
+        <height>551</height>
+       </rect>
+      </property>
+      <layout class="QGridLayout" name="gridLayout" rowstretch="1,10,1,10" columnstretch="1,4,4">
+       <item row="0" column="1">
+        <widget class="QLabel" name="sourceLb">
+         <property name="text">
+          <string>SourceImg</string>
+         </property>
+        </widget>
+       </item>
+       <item row="0" column="2">
+        <widget class="QLabel" name="hisLb">
+         <property name="text">
+          <string>Histogram</string>
+         </property>
+        </widget>
+       </item>
+       <item row="1" column="1">
+        <widget class="QGraphicsView" name="sourceView"/>
+       </item>
+       <item row="1" column="2">
+        <widget class="QGraphicsView" name="histView"/>
+       </item>
+       <item row="2" column="1">
+        <widget class="QLabel" name="otsuLb">
+         <property name="text">
+          <string>OTSU</string>
+         </property>
+        </widget>
+       </item>
+       <item row="2" column="2">
+        <widget class="QLabel" name="entLb">
+         <property name="text">
+          <string>ENTEOPY</string>
+         </property>
+        </widget>
+       </item>
+       <item row="3" column="1">
+        <widget class="QGraphicsView" name="otsuView"/>
+       </item>
+       <item row="3" column="2">
+        <widget class="QGraphicsView" name="entropyView"/>
+       </item>
+       <item row="0" column="0" rowspan="4">
+        <widget class="QGroupBox" name="groupBox">
+         <property name="title">
+          <string>GroupBox</string>
+         </property>
+         <widget class="QSlider" name="threshSlider">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>190</y>
+            <width>71</width>
+            <height>22</height>
+           </rect>
+          </property>
+          <property name="orientation">
+           <enum>Qt::Horizontal</enum>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="chooseImgBtn">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>150</y>
+            <width>71</width>
+            <height>23</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>加载源图</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="histBtn">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>230</y>
+            <width>71</width>
+            <height>23</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>Histo</string>
+          </property>
+          <property name="iconSize">
+           <size>
+            <width>10</width>
+            <height>10</height>
+           </size>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="otsuBtn">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>270</y>
+            <width>71</width>
+            <height>23</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>OTSU</string>
+          </property>
+         </widget>
+         <widget class="QPushButton" name="entBtn">
+          <property name="geometry">
+           <rect>
+            <x>10</x>
+            <y>310</y>
+            <width>71</width>
+            <height>23</height>
+           </rect>
+          </property>
+          <property name="text">
+           <string>ENTROPY</string>
+          </property>
+         </widget>
+        </widget>
+       </item>
+      </layout>
+     </widget>
     </widget>
-    <widget class="QPushButton" name="chooseImgBtn">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>150</y>
-       <width>101</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>加载源图</string>
-     </property>
+    <widget class="QWidget" name="tab2">
+     <attribute name="title">
+      <string>Tab 2</string>
+     </attribute>
+     <widget class="QPushButton" name="pushButton">
+      <property name="geometry">
+       <rect>
+        <x>230</x>
+        <y>220</y>
+        <width>56</width>
+        <height>17</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>PushButton</string>
+      </property>
+     </widget>
     </widget>
-    <widget class="QPushButton" name="histBtn">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>230</y>
-       <width>101</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>显示直方图</string>
-     </property>
+    <widget class="QWidget" name="tab3">
+     <attribute name="title">
+      <string>Tab3</string>
+     </attribute>
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>270</y>
+        <width>371</width>
+        <height>201</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>姑娘我很棒！</string>
+      </property>
+     </widget>
     </widget>
-    <widget class="QPushButton" name="otsuBtn">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>270</y>
-       <width>101</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>OTSU二值化</string>
-     </property>
+    <widget class="QWidget" name="tab4">
+     <attribute name="title">
+      <string>Tab4</string>
+     </attribute>
+     <widget class="QGraphicsView" name="graphicsView">
+      <property name="geometry">
+       <rect>
+        <x>280</x>
+        <y>270</y>
+        <width>256</width>
+        <height>192</height>
+       </rect>
+      </property>
+     </widget>
     </widget>
-    <widget class="QPushButton" name="entBtn">
-     <property name="geometry">
-      <rect>
-       <x>10</x>
-       <y>310</y>
-       <width>101</width>
-       <height>23</height>
-      </rect>
-     </property>
-     <property name="text">
-      <string>ENTRPY二值化</string>
-     </property>
-    </widget>
-   </widget>
-   <widget class="QGraphicsView" name="sourceView">
-    <property name="geometry">
-     <rect>
-      <x>130</x>
-      <y>40</y>
-      <width>321</width>
-      <height>231</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QGraphicsView" name="histView">
-    <property name="geometry">
-     <rect>
-      <x>460</x>
-      <y>40</y>
-      <width>321</width>
-      <height>231</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QGraphicsView" name="otsuView">
-    <property name="geometry">
-     <rect>
-      <x>130</x>
-      <y>321</y>
-      <width>321</width>
-      <height>231</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QGraphicsView" name="entropyView">
-    <property name="geometry">
-     <rect>
-      <x>460</x>
-      <y>321</y>
-      <width>321</width>
-      <height>231</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QLabel" name="sourceLb">
-    <property name="geometry">
-     <rect>
-      <x>130</x>
-      <y>10</y>
-      <width>71</width>
-      <height>16</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>SourceImg</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="hisLb">
-    <property name="geometry">
-     <rect>
-      <x>460</x>
-      <y>10</y>
-      <width>54</width>
-      <height>12</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>Histogram</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="otsuLb">
-    <property name="geometry">
-     <rect>
-      <x>130</x>
-      <y>290</y>
-      <width>54</width>
-      <height>12</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>OTSU</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="entLb">
-    <property name="geometry">
-     <rect>
-      <x>460</x>
-      <y>290</y>
-      <width>54</width>
-      <height>12</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>ENTEOPY</string>
-    </property>
    </widget>
   </widget>
   <widget class="QMenuBar" name="menubar">
@@ -190,8 +219,8 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>800</width>
-     <height>23</height>
+     <width>817</width>
+     <height>18</height>
     </rect>
    </property>
   </widget>
